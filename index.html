@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#141c20" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>SteadyLog — Behavioral & Therapy Tracker</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-row">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="24" height="24" fill="none">
+              <rect width="32" height="32" rx="8" fill="#1F3037"/>
+              <path d="M8 18C8 13.5817 11.5817 10 16 10C20.4183 10 24 13.5817 24 18" stroke="#78BFA9" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="16" cy="18" r="3.5" fill="#E2A86B"/>
+              <path d="M11 23.5H21" stroke="#94A8B0" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="brand-title">SteadyLog</h1>
+            <p class="brand-subtitle">Therapy Behavioral &amp; Context Tracker</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" id="discreetToggleBtn" class="icon-btn" title="Toggle discreet labels on screen" aria-label="Toggle discreet labels">
+            <svg id="eyeOpenIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg id="eyeClosedIcon" class="hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+            <span id="discreetLabelText" class="icon-btn-label">Standard</span>
+          </button>
+
+          <button type="button" id="quickExportHeaderBtn" class="btn-export-pill" title="Export logs as .txt for therapist">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <polyline points="9 15 12 18 15 15"></polyline>
+            </svg>
+            <span>Export .txt</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="main-nav" aria-label="Primary Navigation">
+        <button type="button" class="nav-tab active" data-tab="logView">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Log Episode</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="historyView">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>History</span>
+          <span id="navHistoryCount" class="nav-badge">0</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="insightsView">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Patterns</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="exportView">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Report (.txt)</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- ==================== VIEW 1: LOG EPISODE ==================== -->
+      <section id="logView" class="tab-view active" aria-label="Log Episode">
+        
+        <!-- Incomplete Express Logs Reminder Banner (shown only if there are pending express logs) -->
+        <div id="pendingExpressBanner" class="pending-banner hidden">
+          <div class="pending-banner-text">
+            <span class="pending-dot"></span>
+            <span id="pendingExpressCountText">You have 1 express log waiting for details.</span>
+          </div>
+          <button type="button" id="reviewPendingBtn" class="btn-text-link">Complete now &rarr;</button>
+        </div>
+
+        <!-- Edit Mode Banner (shown when editing an existing entry or completing an Express log) -->
+        <div id="editModeBanner" class="edit-banner hidden">
+          <div class="edit-banner-info">
+            <strong id="editModeTitle">Editing Entry</strong>
+            <span id="editModeSubtitle">Original timestamp preserved</span>
+          </div>
+          <button type="button" id="cancelEditBtn" class="btn-secondary-sm">Cancel Edit</button>
+        </div>
+
+        <!-- 1-Tap Express Log Card -->
+        <div id="expressLogCard" class="card express-card">
+          <div class="express-header">
+            <div>
+              <h2 class="express-title">⚡ 1-Tap Express Stamp</h2>
+              <p class="express-desc">Low energy or right in the moment? Tap once to stamp the exact date &amp; time now, and fill in details later when you're ready.</p>
+            </div>
+          </div>
+          <div class="express-buttons">
+            <button type="button" class="btn-express excoriation" data-express-type="excoriation">
+              <span class="express-icon">⚡</span>
+              <span class="express-btn-text" data-behavior-label="excoriation">Stamp Excoriation</span>
+            </button>
+            <button type="button" class="btn-express masturbation" data-express-type="masturbation">
+              <span class="express-icon">⚡</span>
+              <span class="express-btn-text" data-behavior-label="masturbation">Stamp Masturbation</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Detailed / Quick-Tap Form -->
+        <form id="logForm" class="log-form" novalidate>
+          <!-- Section 1: Date, Time & Behavior Type -->
+          <div class="card form-section">
+            <div class="section-header-row">
+              <h2 class="section-title">1. When &amp; Behavior Type</h2>
+              <span id="liveClockIndicator" class="live-badge">
+                <span class="pulse-dot"></span> Auto-Time (Now)
+              </span>
+            </div>
+
+            <!-- Date & Time Controls -->
+            <div class="datetime-box">
+              <div class="datetime-inputs">
+                <div class="input-group">
+                  <label for="entryDate" class="field-label">Date</label>
+                  <input type="date" id="entryDate" class="text-input" required />
+                </div>
+                <div class="input-group">
+                  <label for="entryTime" class="field-label">Time</label>
+                  <input type="time" id="entryTime" class="text-input" required />
+                </div>
+              </div>
+              <div class="time-offset-row" aria-label="Quick time adjustments">
+                <span class="offset-label">Quick adjust:</span>
+                <button type="button" class="chip-time active" data-offset="now">Now</button>
+                <button type="button" class="chip-time" data-offset="-5">-5m</button>
+                <button type="button" class="chip-time" data-offset="-15">-15m</button>
+                <button type="button" class="chip-time" data-offset="-30">-30m</button>
+                <button type="button" class="chip-time" data-offset="-60">-1h</button>
+              </div>
+            </div>
+
+            <!-- Behavior Type Selector -->
+            <div class="field-block">
+              <label class="field-label">Behavior Type</label>
+              <div class="behavior-selector" role="radiogroup" aria-label="Behavior Type">
+                <button type="button" class="behavior-option active" data-behavior="excoriation" role="radio" aria-checked="true">
+                  <span class="behavior-dot excoriation-dot"></span>
+                  <span class="behavior-name" data-behavior-label="excoriation">Excoriation</span>
+                  <span class="behavior-sub" data-behavior-sub="excoriation">Skin picking / BFRB</span>
+                </button>
+                <button type="button" class="behavior-option" data-behavior="masturbation" role="radio" aria-checked="false">
+                  <span class="behavior-dot masturbation-dot"></span>
+                  <span class="behavior-name" data-behavior-label="masturbation">Masturbation</span>
+                  <span class="behavior-sub" data-behavior-sub="masturbation">Self-stimulation</span>
+                </button>
+                <button type="button" class="behavior-option" data-behavior="both" role="radio" aria-checked="false">
+                  <span class="behavior-dot both-dot"></span>
+                  <span class="behavior-name" data-behavior-label="both">Both</span>
+                  <span class="behavior-sub">Co-occurring episode</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Awareness, Intensity & Duration -->
+          <div class="card form-section">
+            <h2 class="section-title">2. Awareness, Urge Intensity &amp; Duration</h2>
+            
+            <!-- Awareness Level -->
+            <div class="field-block">
+              <label class="field-label">Awareness Level <span class="label-hint">(How did it start?)</span></label>
+              <div class="segmented-grid" id="awarenessGroup">
+                <button type="button" class="seg-btn active" data-awareness="Automatic (Zoned out)">
+                  <span class="seg-main">Automatic</span>
+                  <span class="seg-sub">Zoned out / unconscious</span>
+                </button>
+                <button type="button" class="seg-btn" data-awareness="Focused (Intentional)">
+                  <span class="seg-main">Focused</span>
+                  <span class="seg-sub">Intentional / driven by urge</span>
+                </button>
+                <button type="button" class="seg-btn" data-awareness="Automatic → Focused">
+                  <span class="seg-main">Mixed</span>
+                  <span class="seg-sub">Started automatic, then focused</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Urge Intensity (1-5) -->
+            <div class="field-block">
+              <div class="label-row">
+                <label class="field-label">Urge / Compulsion Intensity</label>
+                <span id="intensityValueLabel" class="intensity-readout">3 — Moderate</span>
+              </div>
+              <div class="intensity-scale" id="intensityGroup" role="radiogroup" aria-label="Urge Intensity 1 to 5">
+                <button type="button" class="intensity-btn" data-intensity="1">
+                  <span class="int-num">1</span>
+                  <span class="int-word">Mild</span>
+                </button>
+                <button type="button" class="intensity-btn" data-intensity="2">
+                  <span class="int-num">2</span>
+                  <span class="int-word">Low</span>
+                </button>
+                <button type="button" class="intensity-btn active" data-intensity="3">
+                  <span class="int-num">3</span>
+                  <span class="int-word">Moderate</span>
+                </button>
+                <button type="button" class="intensity-btn" data-intensity="4">
+                  <span class="int-num">4</span>
+                  <span class="int-word">Strong</span>
+                </button>
+                <button type="button" class="intensity-btn" data-intensity="5">
+                  <span class="int-num">5</span>
+                  <span class="int-word">Intense</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Approximate Duration -->
+            <div class="field-block">
+              <label class="field-label">Approximate Duration</label>
+              <div class="chip-group single-select" id="durationGroup">
+                <button type="button" class="chip" data-duration="< 1 min">&lt; 1 min</button>
+                <button type="button" class="chip active" data-duration="1–5 min">1–5 min</button>
+                <button type="button" class="chip" data-duration="5–15 min">5–15 min</button>
+                <button type="button" class="chip" data-duration="15–30 min">15–30 min</button>
+                <button type="button" class="chip" data-duration="30–60 min">30–60 min</button>
+                <button type="button" class="chip" data-duration="60+ min">60+ min</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Environment & Prior Task -->
+          <div class="card form-section">
+            <h2 class="section-title">3. Environment &amp; Prior Task</h2>
+
+            <!-- Environment / Setting -->
+            <div class="field-block">
+              <div class="label-row">
+                <label class="field-label">Environment / Setting <span class="label-hint">(Tap any that apply)</span></label>
+                <button type="button" class="btn-add-chip" data-category="environments">+ Custom</button>
+              </div>
+              <div id="environmentsChips" class="chip-group"></div>
+            </div>
+
+            <!-- Prior Task -->
+            <div class="field-block">
+              <div class="label-row">
+                <label for="priorTaskInput" class="field-label">Prior Task Before Occurrence <span class="label-hint">(What were you doing right before?)</span></label>
+                <button type="button" class="btn-add-chip" data-category="priorTasks">+ Custom</button>
+              </div>
+              <div id="priorTasksChips" class="chip-group"></div>
+              <input
+                type="text"
+                id="priorTaskInput"
+                class="text-input mt-sm"
+                placeholder="Optional specifics (e.g., studying for exam, watching YouTube in bed, staring at screen)..."
+              />
+            </div>
+          </div>
+
+          <!-- Section 4: Body Location & Sensory State -->
+          <div class="card form-section">
+            <h2 class="section-title">4. Body Location &amp; Sensory State</h2>
+
+            <!-- Body Location (Dynamically highlighted for Excoriation / Both, optional for all) -->
+            <div id="bodyLocationBlock" class="field-block">
+              <div class="label-row">
+                <label class="field-label">Target Body Area <span class="label-hint">(For excoriation / physical site)</span></label>
+                <button type="button" class="btn-add-chip" data-category="bodyLocations">+ Custom</button>
+              </div>
+              <div id="bodyLocationsChips" class="chip-group"></div>
+            </div>
+
+            <!-- Sensory / Physical State -->
+            <div class="field-block">
+              <div class="label-row">
+                <label for="sensoryInput" class="field-label">Sensory &amp; Physical State <span class="label-hint">(Skin texture, tension, fatigue, restlessness)</span></label>
+                <button type="button" class="btn-add-chip" data-category="sensoryStates">+ Custom</button>
+              </div>
+              <div id="sensoryStatesChips" class="chip-group"></div>
+              <input
+                type="text"
+                id="sensoryInput"
+                class="text-input mt-sm"
+                placeholder="Optional sensory details (e.g., felt a rough scab on chin, heavy fatigue, restless legs)..."
+              />
+            </div>
+          </div>
+
+          <!-- Section 5: Trigger & Emotions / Thoughts -->
+          <div class="card form-section">
+            <h2 class="section-title">5. Triggers, Emotions &amp; Thoughts</h2>
+
+            <!-- Triggers -->
+            <div class="field-block">
+              <div class="label-row">
+                <label for="triggerInput" class="field-label">Trigger <span class="label-hint">(What sparked or preceded the urge?)</span></label>
+                <button type="button" class="btn-add-chip" data-category="triggers">+ Custom</button>
+              </div>
+              <div id="triggersChips" class="chip-group"></div>
+              <input
+                type="text"
+                id="triggerInput"
+                class="text-input mt-sm"
+                placeholder="Optional trigger details (e.g., argument, deadline stress, noticed uneven skin texture)..."
+              />
+            </div>
+
+            <!-- Emotions -->
+            <div class="field-block">
+              <div class="label-row">
+                <label for="thoughtsInput" class="field-label">Emotions &amp; Automatic Thoughts</label>
+                <button type="button" class="btn-add-chip" data-category="emotions">+ Custom</button>
+              </div>
+              <div id="emotionsChips" class="chip-group"></div>
+              <textarea
+                id="thoughtsInput"
+                class="textarea-input mt-sm"
+                rows="3"
+                placeholder="Thoughts, self-talk, or feelings before/during/after (e.g., 'I just want to fix this one bump', 'I feel too drained to start my task', 'Need quick relief to fall asleep')..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Submit / Reset Bar -->
+          <div class="form-submit-bar">
+            <button type="button" id="resetFormBtn" class="btn-secondary">Reset</button>
+            <button type="submit" id="saveEntryBtn" class="btn-primary">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span id="saveEntryBtnText">Save Log Entry</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ==================== VIEW 2: HISTORY & LOGS ==================== -->
+      <section id="historyView" class="tab-view" aria-label="Log History">
+        <div class="card filter-card">
+          <div class="filter-top-row">
+            <div class="chip-group single-select" id="historyBehaviorFilter">
+              <button type="button" class="chip active" data-filter-behavior="all">All</button>
+              <button type="button" class="chip" data-filter-behavior="excoriation" data-behavior-label="excoriation">Excoriation</button>
+              <button type="button" class="chip" data-filter-behavior="masturbation" data-behavior-label="masturbation">Masturbation</button>
+              <button type="button" class="chip" data-filter-behavior="both" data-behavior-label="both">Both</button>
+              <button type="button" class="chip chip-warning" data-filter-behavior="incomplete">⚡ Needs Details</button>
+            </div>
+          </div>
+
+          <div class="filter-search-row">
+            <input
+              type="search"
+              id="historySearchInput"
+              class="text-input"
+              placeholder="Search triggers, tasks, emotions, thoughts, locations..."
+            />
+            <select id="historyDateFilter" class="select-input" aria-label="Filter by time period">
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="7">Past 7 Days</option>
+              <option value="14">Past 14 Days</option>
+              <option value="30">Past 30 Days</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="historyList" class="history-list"></div>
+      </section>
+
+      <!-- ==================== VIEW 3: PATTERNS & INSIGHTS ==================== -->
+      <section id="insightsView" class="tab-view" aria-label="Patterns and Insights">
+        <div class="card insights-filter-bar">
+          <div class="insights-filter-row">
+            <span class="field-label mb-0">Analyze Period:</span>
+            <div class="chip-group single-select" id="insightsRangeGroup">
+              <button type="button" class="chip active" data-insights-days="all">All Time</button>
+              <button type="button" class="chip" data-insights-days="7">Past 7 Days</button>
+              <button type="button" class="chip" data-insights-days="14">Past 14 Days</button>
+              <button type="button" class="chip" data-insights-days="30">Past 30 Days</button>
+            </div>
+          </div>
+          <div class="insights-filter-row mt-xs">
+            <span class="field-label mb-0">Behavior Focus:</span>
+            <div class="chip-group single-select" id="insightsBehaviorGroup">
+              <button type="button" class="chip active" data-insights-behavior="all">All Combined</button>
+              <button type="button" class="chip" data-insights-behavior="excoriation" data-behavior-label="excoriation">Excoriation</button>
+              <button type="button" class="chip" data-insights-behavior="masturbation" data-behavior-label="masturbation">Masturbation</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Metric Cards -->
+        <div class="metrics-grid" id="insightsSummaryCards"></div>
+
+        <!-- Breakdown Panels -->
+        <div class="insights-panels-grid">
+          <div class="card insight-panel">
+            <h3 class="panel-title">Time of Day Distribution</h3>
+            <p class="panel-subtitle">When episodes most frequently occur</p>
+            <div id="timeOfDayBars" class="bar-list"></div>
+          </div>
+
+          <div class="card insight-panel">
+            <h3 class="panel-title">Awareness Level (ComB Model)</h3>
+            <p class="panel-subtitle">Automatic / zoned-out vs. Focused / intentional</p>
+            <div id="awarenessBars" class="bar-list"></div>
+          </div>
+
+          <div class="card insight-panel">
+            <h3 class="panel-title">Top Triggers</h3>
+            <p class="panel-subtitle">Most frequent precipitating cues</p>
+            <div id="topTriggersBars" class="bar-list"></div>
+          </div>
+
+          <div class="card insight-panel">
+            <h3 class="panel-title">Top Prior Tasks</h3>
+            <p class="panel-subtitle">Activities right before occurrence</p>
+            <div id="topPriorTasksBars" class="bar-list"></div>
+          </div>
+
+          <div class="card insight-panel">
+            <h3 class="panel-title">Top Emotions &amp; Internal States</h3>
+            <p class="panel-subtitle">Affective patterns linked to episodes</p>
+            <div id="topEmotionsBars" class="bar-list"></div>
+          </div>
+
+          <div class="card insight-panel">
+            <h3 class="panel-title">Environments &amp; Sensory / Body Sites</h3>
+            <p class="panel-subtitle">Settings, physical states, and target locations</p>
+            <div id="topContextBars" class="bar-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 4: EXPORT / THERAPIST REPORT (.TXT) ==================== -->
+      <section id="exportView" class="tab-view" aria-label="Export Therapist Report">
+        <div class="card export-config-card">
+          <div class="section-header-row">
+            <div>
+              <h2 class="section-title">Export Therapist Report (.txt)</h2>
+              <p class="section-desc">Generates a structured text document with a behavioral pattern summary at the top followed by your chronological episode logs.</p>
+            </div>
+          </div>
+
+          <div class="export-controls-grid">
+            <div class="input-group">
+              <label for="exportDatePreset" class="field-label">Date Range</label>
+              <select id="exportDatePreset" class="select-input">
+                <option value="all">All Logged Entries</option>
+                <option value="7">Past 7 Days (Weekly Session)</option>
+                <option value="14">Past 14 Days (Biweekly Session)</option>
+                <option value="30">Past 30 Days (Monthly Review)</option>
+                <option value="custom">Custom Date Range...</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="exportBehaviorFilter" class="field-label">Include Behaviors</label>
+              <select id="exportBehaviorFilter" class="select-input">
+                <option value="all">All Behaviors (Excoriation &amp; Masturbation)</option>
+                <option value="excoriation">Excoriation Only</option>
+                <option value="masturbation">Masturbation Only</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="exportSortOrder" class="field-label">Chronological Order</label>
+              <select id="exportSortOrder" class="select-input">
+                <option value="desc">Newest First (Reverse Chronological)</option>
+                <option value="asc">Oldest First (Chronological)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Custom Date Range Inputs -->
+          <div id="exportCustomDatesRow" class="datetime-inputs mt-sm hidden">
+            <div class="input-group">
+              <label for="exportStartDate" class="field-label">Start Date</label>
+              <input type="date" id="exportStartDate" class="text-input" />
+            </div>
+            <div class="input-group">
+              <label for="exportEndDate" class="field-label">End Date</label>
+              <input type="date" id="exportEndDate" class="text-input" />
+            </div>
+          </div>
+
+          <!-- Primary Export Action Buttons -->
+          <div class="export-action-buttons">
+            <button type="button" id="downloadTxtBtn" class="btn-primary">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download .txt Document</span>
+            </button>
+            <button type="button" id="copyTxtBtn" class="btn-secondary">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="copyTxtBtnLabel">Copy Text to Clipboard</span>
+            </button>
+          </div>
+
+          <!-- Document Preview -->
+          <div class="preview-block">
+            <div class="label-row">
+              <label for="txtReportPreview" class="field-label">Live .txt Document Preview</label>
+              <span id="exportEntryCountLabel" class="label-hint">0 entries included</span>
+            </div>
+            <textarea id="txtReportPreview" class="report-preview-textarea" readonly aria-label="Text report preview"></textarea>
+          </div>
+        </div>
+
+        <!-- Local Data Backup & Management Card -->
+        <div class="card backup-card">
+          <h3 class="section-title">Device Storage &amp; Backup</h3>
+          <p class="section-desc">Your logs are stored 100% privately in this browser's offline storage. You can export a full JSON backup to transfer between your phone and computer.</p>
+          <div class="backup-actions">
+            <button type="button" id="exportJsonBtn" class="btn-secondary-sm">Download Backup (.json)</button>
+            <label for="importJsonInput" class="btn-secondary-sm file-label-btn">Restore Backup (.json)</label>
+            <input type="file" id="importJsonInput" accept=".json,application/json" class="hidden" />
+            <button type="button" id="clearAllDataBtn" class="btn-danger-sm">Clear All Logs</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Custom Tag Modal -->
+    <div id="customChipModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="customChipModalTitle">
+      <div class="modal-card">
+        <h3 id="customChipModalTitle" class="modal-title">Add Custom Quick-Tap Tag</h3>
+        <p id="customChipModalDesc" class="modal-desc">This tag will be saved to your quick-tap list for future logs.</p>
+        <form id="customChipForm">
+          <input type="text" id="customChipInput" class="text-input" placeholder="Enter tag name..." maxlength="50" required />
+          <div class="modal-actions">
+            <button type="button" id="cancelCustomChipBtn" class="btn-secondary-sm">Cancel</button>
+            <button type="submit" class="btn-primary-sm">Add &amp; Select Tag</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Confirm Delete / Action Modal -->
+    <div id="confirmModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+      <div class="modal-card">
+        <h3 id="confirmModalTitle" class="modal-title">Confirm Action</h3>
+        <p id="confirmModalDesc" class="modal-desc">Are you sure?</p>
+        <div class="modal-actions">
+          <button type="button" id="confirmCancelBtn" class="btn-secondary-sm">Cancel</button>
+          <button type="button" id="confirmProceedBtn" class="btn-danger-sm">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
